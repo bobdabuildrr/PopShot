@@ -1,0 +1,50 @@
+# Push a tag like v0.1.0 to build a universal PopShot.zip, publish a GitHub release,
+# and (if the TAP_TOKEN secret is set) update the cask in <owner>/homebrew-tap.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-14
+    env:
+      TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and self-test the universal app
+        run: |
+          echo "${GITHUB_REF_NAME#v}" > VERSION
+          make test UNIVERSAL=1
+          lipo -archs build/PopShot.app/Contents/MacOS/PopShot
+
+      - name: Package
+        run: make zip UNIVERSAL=1
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" build/PopShot.zip \
+            --title "PopShot ${GITHUB_REF_NAME#v}" --generate-notes
+
+      - name: Update Homebrew tap
+        if: env.TAP_TOKEN != ''
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          SHA="$(shasum -a 256 build/PopShot.zip | cut -d' ' -f1)"
+          git clone "https://x-access-token:${TAP_TOKEN}@github.com/${GITHUB_REPOSITORY_OWNER}/homebrew-tap.git" tap
+          mkdir -p tap/Casks
+          sed -e "s/__VERSION__/${VERSION}/" -e "s/__SHA256__/${SHA}/" -e "s/__GITHUB_USER__/${GITHUB_REPOSITORY_OWNER}/g" \
+            packaging/popshot.rb.template > tap/Casks/popshot.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/popshot.rb
+          git commit -m "popshot ${VERSION}"
+          git push

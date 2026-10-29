@@ -1,0 +1,40 @@
+name: Bug report
+description: Something in PopShot didn't work the way you expected.
+labels: [bug]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: What did you do?
+      description: The steps, one per line, so we can make it happen on our Mac too.
+      placeholder: |
+        1. Pressed ⌘⇧4 and selected an area
+        2. Clicked Copy
+        3. Pasted into Slack
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened?
+      description: Screenshots or a short screen recording help a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PopShot version
+      description: Filled in for you when you use Report a Bug… in PopShot's menu.
+      placeholder: "0.1.0"
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      description: Apple menu › About This Mac.
+      placeholder: "14.4"

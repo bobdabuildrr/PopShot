@@ -1,0 +1,25 @@
+cask "popshot" do
+  version "__VERSION__"
+  sha256 "__SHA256__"
+
+  url "https://github.com/__GITHUB_USER__/PopShot/releases/download/v#{version}/PopShot.zip"
+  name "PopShot"
+  desc "Opens every screenshot and screen recording the moment you take it"
+  homepage "https://github.com/__GITHUB_USER__/PopShot"
+
+  depends_on macos: ">= :ventura"
+
+  app "PopShot.app"
+
+  # PopShot is open source and ad-hoc signed (no paid Apple Developer ID), so clear the
+  # download quarantine flag that would otherwise make Gatekeeper refuse to open it.
+  postflight do
+    system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{appdir}/PopShot.app"]
+  end
+
+  uninstall launchctl: "app.popshot.PopShot",
+            quit:      "app.popshot.PopShot",
+            signal:    [["TERM", "app.popshot.PopShot"]]
+
+  zap trash: "~/Library/Preferences/app.popshot.PopShot.plist"
+end
