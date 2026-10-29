@@ -15,11 +15,18 @@ cask "popshot" do
   # download quarantine flag that would otherwise make Gatekeeper refuse to open it.
   postflight do
     system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{appdir}/PopShot.app"]
+    # Start it right away so the welcome screen shows; Homebrew doesn't open apps by itself.
+    system_command "/usr/bin/open", args: ["#{appdir}/PopShot.app"]
   end
 
   uninstall launchctl: "app.popshot.PopShot",
             quit:      "app.popshot.PopShot",
             signal:    [["TERM", "app.popshot.PopShot"]]
+
+  caveats <<~EOS
+    PopShot is running: look for its icon in the menu bar.
+    Take a screenshot with ⌘⇧4 to try it.
+  EOS
 
   zap trash: "~/Library/Preferences/app.popshot.PopShot.plist"
 end
