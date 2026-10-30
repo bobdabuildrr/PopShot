@@ -13,8 +13,7 @@
   Free · open source · native Swift · ~1.5 MB · macOS 13+
 </p>
 
-<p align="center"><img src="docs/demo.gif" width="720" alt="PopShot demo: take a screenshot, it pops up, mark it up, copy it"></p>
-<p align="center"><a href="docs/demo.mp4">▶ Watch with sound</a></p>
+https://github.com/user-attachments/assets/81c7d716-698d-4342-bda8-948aa6f9d395
 
 ---
 
