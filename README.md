@@ -13,7 +13,7 @@
   Free · open source · native Swift · ~1.5 MB · macOS 13+
 </p>
 
-https://github.com/user-attachments/assets/81c7d716-698d-4342-bda8-948aa6f9d395
+https://github.com/user-attachments/assets/ca0e4f0f-c23b-4893-b64b-c8f2f319f66a
 
 ---
 
